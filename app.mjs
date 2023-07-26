@@ -22,7 +22,7 @@ const main = async () => {
 
         const remoteNetworkId = await utilManager.lookupRemoteNetworkByName(remoteNetwork)
 
-        const groupId = await utilManager.lookupGroupByName(group)
+        const groupId = await utilManager.lookupGroupByName(group);
 
         // Get all resources in the remote network
         const resources = await utilManager.fetchAllResourcesInRemoteNetwork(remoteNetworkId);
@@ -33,7 +33,7 @@ const main = async () => {
             {},
             async (type, apiObj) => {
                 if (type === 'ADDED') {
-                    const host = apiObj.spec.rules[0].host
+                    const host = apiObj.spec.rules[0].host;
 
                     // Check if the ingress host is part of the domain list
                     if (domainList.filter(domainList => host.endsWith(domainList)).length !== 0) {
@@ -44,7 +44,7 @@ const main = async () => {
                             // resource name: ingress name
                             // resource address: ingress first rule's host
                             // resource group: predefined group name
-                            await utilManager.createResource(apiObj.metadata.name, host, remoteNetworkId, undefined, groupId)
+                            await utilManager.createResource(apiObj.metadata.name, host, remoteNetworkId, undefined, groupId);
                             console.log(`New Ingress Found: creating resource '${host}' with name '${apiObj.metadata.name}' in remote network ${remoteNetwork}`);
                         }
                         else {
@@ -52,7 +52,7 @@ const main = async () => {
                         }
                     }
                     else {
-                        console.log(`Skipping: ingress ${apiObj.metadata.name} is not part of domain list.`)
+                        console.log(`Skipping: ingress ${apiObj.metadata.name} is not part of domain list.`);
                     }
                 }
                 else {
@@ -66,6 +66,7 @@ const main = async () => {
         }, 5000);
     } catch (err) {
         console.error(err);
+        throw err;
     }
 };
 
