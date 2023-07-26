@@ -1,0 +1,9 @@
+*.pyc
+venv/
+__pycache__
+stack.json
+.idea/
+node_modules/
+.env
+*.iml
+package-lock.json

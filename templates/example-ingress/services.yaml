@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: web1
+  namespace: default
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    run: web
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web2
+  namespace: default
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    run: web2
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web3
+  namespace: default
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    run: web3
+  type: NodePort

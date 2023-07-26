@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      run: web1
+  template:
+    metadata:
+      labels:
+        run: web1
+    spec:
+      containers:
+        - image: us-docker.pkg.dev/google-samples/containers/gke/hello-app:1.0
+          imagePullPolicy: IfNotPresent
+          name: web1
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web2
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      run: web2
+  template:
+    metadata:
+      labels:
+        run: web2
+    spec:
+      containers:
+        - image: us-docker.pkg.dev/google-samples/containers/gke/hello-app:2.0
+          imagePullPolicy: IfNotPresent
+          name: web2
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web3
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      run: web3
+  template:
+    metadata:
+      labels:
+        run: web3
+    spec:
+      containers:
+        - image: us-docker.pkg.dev/google-samples/containers/gke/hello-app:2.0
+          imagePullPolicy: IfNotPresent
+          name: web3
+          ports:
+            - containerPort: 8080
+              protocol: TCP
