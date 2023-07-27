@@ -14,13 +14,13 @@ import dotenvPkg from 'dotenv';
 dotenvPkg.config();
 
 
-let [remoteNetwork, domainList, group] = [process.env.TG_REMOTE_NETWORK, process.env.DOMAIN_LIST.split(","), process.env.TG_GROUP_NAME]
+let [remoteNetwork, domainList, group] = [process.env.TG_REMOTE_NETWORK, process.env.DOMAIN_LIST.split(","), process.env.TG_GROUP_NAME];
 
 const main = async () => {
     try {
         const utilManager = new TwingateUtilManager();
 
-        const remoteNetworkId = await utilManager.lookupRemoteNetworkByName(remoteNetwork)
+        const remoteNetworkId = await utilManager.lookupRemoteNetworkByName(remoteNetwork);
 
         const groupId = await utilManager.lookupGroupByName(group);
 
