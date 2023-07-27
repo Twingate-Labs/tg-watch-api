@@ -26,10 +26,11 @@ const main = async () => {
 
         // Get all resources in the remote network
         let resources = await utilManager.fetchAllResourcesInRemoteNetwork(remoteNetworkId);
+
         // Start watch for K8S ingress changes
         const req = await watch.watch(
             '/apis/networking.k8s.io/v1/ingresses',
-            {allowWatchBookmarks: true},
+            {},
             async (type, apiObj) => {
                 if (type === 'ADDED') {
                     const host = apiObj.spec.rules[0].host;
