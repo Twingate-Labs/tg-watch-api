@@ -81,6 +81,8 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
             console.warn(`Watch error: ${err}`);
         },
     );
+
+    // Watch for x ms before starting a new watch api call
     await delay(600000);
     return continueWatch;
 }
