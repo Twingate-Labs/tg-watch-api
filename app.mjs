@@ -1,18 +1,18 @@
 import * as k8s from '@kubernetes/client-node';
 import {TwingateUtilManager} from "./TwingateUtilManager.mjs";
+import dotenvPkg from 'dotenv';
 
 // Code below is a sample that uses Kubernetes watch API to monitor ingress changes and create Twingate resources
 // Note: GKE does not fire delete events for ingress
-const delay = async (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 const kc = new k8s.KubeConfig();
 kc.loadFromDefault();
 
-const watch = new k8s.Watch(kc);
-
-import dotenvPkg from 'dotenv';
-
 dotenvPkg.config();
+
+const delay = async (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+const watch = new k8s.Watch(kc);
 
 
 let [remoteNetwork, domainList, group] = [process.env.TG_REMOTE_NETWORK, process.env.DOMAIN_LIST.split(","), process.env.TG_GROUP_NAME];
