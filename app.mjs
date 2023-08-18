@@ -78,7 +78,7 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
         },
         // done callback is called if the watch terminates normally
         (err) => {
-            console.warn(`Watch error: ${err}`);
+            console.warn(`Watch error: ${err}. This message should be harmless.`);
         },
     );
 
