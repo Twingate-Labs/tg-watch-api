@@ -32,7 +32,7 @@ const main = async () => {
         let continueWatch = true;
         while (continueWatch) {
             resources = await utilManager.fetchAllResourcesInRemoteNetwork(remoteNetworkId);
-            [continueWatch, resources] = await watchForChanges(utilManager, remoteNetworkId, groupId, resources);
+            continueWatch = await watchForChanges(utilManager, remoteNetworkId, groupId, resources);
         }
 
     } catch (err) {
@@ -95,7 +95,7 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
 
     // Watch for x ms before starting a new watch api call
     await delay(600000);
-    return [continueWatch, resources];
+    return continueWatch;
 }
 
 main();
