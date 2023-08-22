@@ -63,22 +63,17 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
 
                     if (hosts.includes(host)) {
                         console.log(`Skipping: resource '${host}' - resource being created`);
-                        return continueWatch;
                     }
 
-                    hosts.push(host);
-
                     // Check if resource already exists in the remote network
-                    if (!resources.map(resource => resource.address.value).includes(host)) {
+                    else if (!resources.map(resource => resource.address.value).includes(host)) {
                         // Create resource in Twingate with
                         // resource name: ingress name
                         // resource address: ingress first rule's host
                         // resource group: predefined group name
+                        hosts.push(host);
                         await utilManager.createResource(apiObj.metadata.name, host, remoteNetworkId, undefined, groupId);
                         console.log(`New Ingress Found: creating resource '${host}' with name '${apiObj.metadata.name}' in remote network ${remoteNetwork}`);
-
-                        // refresh the remote network resources
-                        resources = await utilManager.fetchAllResourcesInRemoteNetwork(remoteNetworkId);
                     } else {
                         console.log(`Skipping: resource '${host}' with name '${apiObj.metadata.name}' has already been created in remote network ${remoteNetwork} previously.`);
                     }
