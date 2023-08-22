@@ -31,6 +31,7 @@ const main = async () => {
 
         let continueWatch = true;
         while (continueWatch) {
+            resources = await utilManager.fetchAllResourcesInRemoteNetwork(remoteNetworkId);
             [continueWatch, resources] = await watchForChanges(utilManager, remoteNetworkId, groupId, resources);
         }
 
@@ -45,6 +46,9 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
     console.log("Start or Restarting Watching For Changes.")
     let continueWatch = true;
     // Start watch for K8S ingress changes
+
+    let hosts = [];
+
     const req = await watch.watch(
         '/apis/networking.k8s.io/v1/ingresses',
         {},
@@ -54,6 +58,13 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
 
                 // Check if the ingress host is part of the domain list
                 if (domainList.filter(domainList => host.endsWith(domainList)).length !== 0) {
+
+                    if (hosts.includes(host)) {
+                        console.log(`Skipping: resource '${host}' - resource being created`);
+                        return continueWatch;
+                    }
+
+                    hosts.push(host)
 
                     // Check if resource already exists in the remote network
                     if (!resources.map(resource => resource.address.value).includes(host)) {
