@@ -48,7 +48,6 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
     // Start watch for K8S ingress changes
 
     let hosts = [];
-    console.log(`Current hosts array ${hosts}`)
 
     const req = await watch.watch(
         '/apis/networking.k8s.io/v1/ingresses',
@@ -56,6 +55,8 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
         async (type, apiObj) => {
             if (type === 'ADDED') {
                 const host = apiObj.spec.rules[0].host;
+
+                console.log(`Current hosts array ${hosts}`);
 
                 // Check if the ingress host is part of the domain list
                 if (domainList.filter(domainList => host.endsWith(domainList)).length !== 0) {
