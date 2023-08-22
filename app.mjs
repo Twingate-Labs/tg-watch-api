@@ -48,6 +48,7 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
     // Start watch for K8S ingress changes
 
     let hosts = [];
+    console.log(`Current hosts array ${hosts}`)
 
     const req = await watch.watch(
         '/apis/networking.k8s.io/v1/ingresses',
@@ -64,7 +65,7 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
                         return continueWatch;
                     }
 
-                    hosts.push(host)
+                    hosts.push(host);
 
                     // Check if resource already exists in the remote network
                     if (!resources.map(resource => resource.address.value).includes(host)) {

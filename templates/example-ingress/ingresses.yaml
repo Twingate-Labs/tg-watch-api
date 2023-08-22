@@ -51,3 +51,39 @@ spec:
                 name: web3
                 port:
                   number: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress4444
+  namespace: default
+spec:
+  rules:
+    - host: "web4444.example.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: web2
+                port:
+                  number: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress3333
+  namespace: default
+spec:
+  rules:
+    - host: "web3333.example.com"
+      http:
+        paths:
+          - pathType: Prefix
+            path: "/"
+            backend:
+              service:
+                name: web2
+                port:
+                  number: 8080
