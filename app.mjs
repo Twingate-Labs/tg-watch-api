@@ -56,8 +56,6 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
             if (type === 'ADDED') {
                 const host = apiObj.spec.rules[0].host;
 
-                console.log(`Current hosts array ${hosts}`);
-
                 // Check if the ingress host is part of the domain list
                 if (domainList.filter(domainList => host.endsWith(domainList)).length !== 0) {
 
