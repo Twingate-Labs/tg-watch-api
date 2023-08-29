@@ -1,6 +1,7 @@
 import * as k8s from '@kubernetes/client-node';
 import {TwingateUtilManager} from "./TwingateUtilManager.mjs";
 import dotenvPkg from 'dotenv';
+import AsyncLock from 'async-lock';
 
 // Code below is a sample that uses Kubernetes watch API to monitor ingress changes and create Twingate resources
 // Note: GKE does not fire delete events for ingress
@@ -47,40 +48,52 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
     let continueWatch = true;
     // Start watch for K8S ingress changes
 
+    let lock = new AsyncLock()
+
     let hosts = [];
 
     const req = await watch.watch(
         '/apis/networking.k8s.io/v1/ingresses',
         {},
         async (type, apiObj) => {
-            if (type === 'ADDED') {
-                const host = apiObj.spec.rules[0].host;
-
-                // Check if the ingress host is part of the domain list
-                if (domainList.filter(domainList => host.endsWith(domainList)).length !== 0) {
-
-                    if (hosts.includes(host)) {
-                        console.log(`Skipping: resource '${host}' - resource being created`);
-                    }
-
-                    // Check if resource already exists in the remote network
-                    else if (!resources.map(resource => resource.address.value).includes(host)) {
-                        // Create resource in Twingate with
-                        // resource name: ingress name
-                        // resource address: ingress first rule's host
-                        // resource group: predefined group name
-                        hosts.push(host);
-                        await utilManager.createResource(apiObj.metadata.name, host, remoteNetworkId, undefined, groupId);
-                        console.log(`New Ingress Found: creating resource '${host}' with name '${apiObj.metadata.name}' in remote network ${remoteNetwork}`);
-                    } else {
-                        console.log(`Skipping: resource '${host}' with name '${apiObj.metadata.name}' has already been created in remote network ${remoteNetwork} previously.`);
-                    }
-                } else {
-                    console.log(`Skipping: ingress ${apiObj.metadata.name} is not part of domain list.`);
-                }
-            } else {
+            if (type != 'ADDED') {
                 console.log('unknown type: ' + type);
+                return;
             }
+            const host = apiObj.spec.rules[0].host;
+
+            // Check if the ingress host is part of the domain list
+            if (domainList.filter(domainList => host.endsWith(domainList)).length !== 0) {
+                if (hosts.includes(host)) {
+                    console.log(`Skipping: resource '${host}' - resource being created`);
+                    return
+                }
+            }
+            else {
+                console.log(`Skipping: ingress ${apiObj.metadata.name} is not part of domain list.`);
+                return;
+            }
+
+            lock.acquire(host, async function() {
+
+                if (hosts.includes(host)) {
+                    console.log(`Skipping: resource '${host}' - resource being created`);
+                    return
+                }
+
+                if (resources.map(resource => resource.address.value).includes(host)) {
+                    console.log(`Skipping: resource '${host}' with name '${apiObj.metadata.name}' has already been created in remote network ${remoteNetwork} previously.`);
+                    return;
+                }
+                hosts.push(host);
+                await utilManager.createResource(apiObj.metadata.name, host, remoteNetworkId, undefined, groupId);
+                console.log(`New Ingress Found: creating resource '${host}' with name '${apiObj.metadata.name}' in remote network ${remoteNetwork}`);
+
+            }, function(err, ret) {
+                console.log("Lock Released")
+            }, {});
+
+
         },
         // done callback is called if the watch terminates normally
         (err) => {
