@@ -60,6 +60,7 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
                 console.log('unknown type: ' + type);
                 return;
             }
+
             const host = apiObj.spec.rules[0].host;
 
             // Check if the ingress host is part of the domain list
@@ -70,7 +71,7 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
                 }
             }
             else {
-                console.log(`Skipping: ingress ${apiObj.metadata.name} is not part of domain list.`);
+                console.log(`Skipping: ingress ${apiObj.metadata.name}: ${host} is not part of domain list.`);
                 return;
             }
 
@@ -90,7 +91,7 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
                 console.log(`New Ingress Found: creating resource '${host}' with name '${apiObj.metadata.name}' in remote network ${remoteNetwork}`);
 
             }, function(err, ret) {
-                console.log("Lock Released")
+
             }, {});
 
 
