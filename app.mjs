@@ -66,19 +66,19 @@ const watchForChanges = async (utilManager, remoteNetworkId, groupId, resources)
             // Check if the ingress host is part of the domain list
             if (domainList.filter(domainList => host.endsWith(domainList)).length !== 0) {
                 if (hosts.includes(host)) {
-                    console.log(`Skipping: resource '${host}' - resource being created`);
+                    console.log(`Skipping: resource '${host}' with name '${apiObj.metadata.name}'- resource being created`);
                     return
                 }
             }
             else {
-                console.log(`Skipping: ingress ${apiObj.metadata.name}: ${host} is not part of domain list.`);
+                console.log(`Skipping: ingress '${apiObj.metadata.name}: ${host}' is not part of domain list.`);
                 return;
             }
 
             lock.acquire(host, async function() {
 
                 if (hosts.includes(host)) {
-                    console.log(`Skipping: resource '${host}' - resource being created`);
+                    console.log(`Skipping: resource '${host}' with name '${apiObj.metadata.name}' - resource being created`);
                     return
                 }
 
