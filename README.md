@@ -30,7 +30,7 @@ kubectl -n {namespace} create secret generic tg-watch-api --from-env-file=.examp
 ```
 4. deploy the tg-watch-api application
 ```
-kubectl -n {namespace} apply templates/statefulset.yaml
+kubectl -n {namespace} apply -f templates/statefulset.yaml
 ```
 
 ## How to Delete the Application
