@@ -16,7 +16,7 @@ cd tg-watch-api
    2. _subjects.namespace_: namespace of the cluster-role-binding, make sure this is the same namespace as the tg-watch-api application
 3. apply [cluster-role.yaml](templates/cluster-role.yaml) and [cluster-role-binding.yaml](templates/cluster-role-binding.yaml)
 ```
-kubectl -n {namespace} -f templates/cluster-role.yaml -f templates/cluster-role-binding.yaml
+kubectl -n {namespace} apply -f templates/cluster-role.yaml -f templates/cluster-role-binding.yaml
 ```
 4. modify [.example-env](.example-env)
    1. TG_API_KEY: Twingate API Key
