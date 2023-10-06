@@ -25,8 +25,8 @@ export class TwingateUtilManager {
 
 
     async fetchAllResourcesInRemoteNetwork(remoteNetwork, opts) {
-        const resources = await this.apiClient._fetchAllNodesOfType("Resource", opts);
-        return resources.filter(resource => resource.remoteNetwork.id === remoteNetwork)
+        let query = this.apiClient.getRootNodePagedQuery("RemoteNetworkResource", "remoteNetwork", "resources", ["id", "name", "address{value}"])
+        return await this.apiClient.fetchAllRootNodePages(query, {id: remoteNetwork});
     }
 
     async createResource(name, address, remoteNetworkId, protocols = null, groupIds = []) {
