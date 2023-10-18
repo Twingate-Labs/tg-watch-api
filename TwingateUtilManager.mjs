@@ -6,7 +6,7 @@ dotenvPkg.config();
 
 let [tgAccount, tgApiKey] = [process.env.TG_ACCOUNT, process.env.TG_API_KEY]
 
-const applicationName = "tg-watch-api"
+const applicationName = "Twingate-tg-watch-api/0.0.1"
 
 export class TwingateUtilManager {
     constructor() {
